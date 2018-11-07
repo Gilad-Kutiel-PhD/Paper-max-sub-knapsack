@@ -36,7 +36,7 @@ $f_A(B) \geq (1 - e^{4\delta / (2\delta - 1)})f_A(O \setminus x)$
 \end{observation}
 
 \begin{observation}
-$f(O \setminus x) \geq 1/e^{-1/2}f(O)$
+$f(O \setminus x) \geq e^{-1/2}f(O)$
 \end{observation}
 
 Let $G$ be the set produced by the algorithm, then:
@@ -51,9 +51,9 @@ f(G) & \geq f(A) + f_A(B)
 \\& = e^{4\delta / (2\delta - 1)}f(A) 
 	+ (1 - e^{4\delta / (2\delta - 1)})f(A \cup S \setminus x)
 \\& \geq e^{4\delta / (2\delta - 1)}(1 - e^{\delta - 1/2})f(O)
-	+ (1 - e^{4\delta / (2\delta - 1)})1/e^{-1/2}f(O)
+	+ (1 - e^{4\delta / (2\delta - 1)})e^{-1/2}f(O)
 \\& = [
-		e^{4\delta / (2\delta - 1)}(1 - e^{\delta - 1/2}) + (1 - e^{4\delta / (2\delta - 1)})1/e^{-1/2}
+		e^{4\delta / (2\delta - 1)}(1 - e^{\delta - 1/2}) + (1 - e^{4\delta / (2\delta - 1)})e^{-1/2}
 		]f(O)
 \\&& \geq (1-e^{-1/2})f(O)
 % 
