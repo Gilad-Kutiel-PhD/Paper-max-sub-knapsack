@@ -28,18 +28,22 @@
 	below=-1mm,
 }}
 
-%DEFAULT STYLE
+% NODE
 \tikzset{
-	>=Latex
-	,every picture/.style={
-		very thick
-	}
-	,every node/.style={
+	default node/.style={
 		draw 
 		,circle
 		,inner sep=0mm
 		,minimum size=5mm
 		,very thick
 		,font=\small
+	}
+}
+ 
+% DEFAULT STYLE
+\tikzset{
+	>=Latex
+	,every picture/.style={
+		very thick
 	}
 }
