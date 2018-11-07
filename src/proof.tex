@@ -7,12 +7,14 @@ and just before dropping $y$.
 
 \begin{figure}[h]
 \begin{tikzpicture}[]
+\draw[thin, gray!30] (0,-1) grid (6,1);
 \draw 
-	(0,0) 
-	rectangle ++(2,1) node[pos=.5]{A}
- 	rectangle ++(3,-1) node[pos=.5]{x}
- 	rectangle ++(1,1) node[pos=.5]{B}
- 	rectangle ++(2,-1) node[pos=.5]{y};
+	(0,1) 
+	rectangle ++(2.9,-1) node[pos=.5]{A}
+ 	rectangle ++(1,-1) node[pos=.5]{B}
+ 	rectangle ++(2.9,+1) node[pos=.5]{y};
+\draw (2.9, 0) rectangle +(3.4,1) node[pos=.5]{x};
+	
 \end{tikzpicture} 
 \end{figure}
 
@@ -33,3 +35,28 @@ TODO verify this $\Downarrow$
 $f_A(B) \geq (1 - e^{4\delta / (2\delta - 1)})f_A(O \setminus x)$
 \end{observation}
 
+\begin{observation}
+$f(O \setminus x) \geq 1/e^{-1/2}f(O)$
+\end{observation}
+
+Let $G$ be the set produced by the algorithm, then:
+\begin{proof}
+\def\arraystretch{1.5}
+$$
+\begin{array}{lll}
+% 
+f(G) & \geq f(A) + f_A(B)
+\\& \geq f(A) + (1 - e^{4\delta / (2\delta - 1)})f_A(O \setminus x)
+\\& = f(A) + (1 - e^{4\delta / (2\delta - 1)})(f(A \cup S \setminus x) - f(A))
+\\& = e^{4\delta / (2\delta - 1)}f(A) 
+	+ (1 - e^{4\delta / (2\delta - 1)})f(A \cup S \setminus x)
+\\& \geq e^{4\delta / (2\delta - 1)}(1 - e^{\delta - 1/2})f(O)
+	+ (1 - e^{4\delta / (2\delta - 1)})1/e^{-1/2}f(O)
+\\& = [
+		e^{4\delta / (2\delta - 1)}(1 - e^{\delta - 1/2}) + (1 - e^{4\delta / (2\delta - 1)})1/e^{-1/2}
+		]f(O)
+\\&& \geq (1-e^{-1/2})f(O)
+% 
+\end{array}
+$$
+\end{proof}
