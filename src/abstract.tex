@@ -1,0 +1,16 @@
+A well known result by Khuller et. al state that the \emph{Budgeted Maximum Cover}
+can be approximated within a factor of $1-e^{-1}$ and this is the best one can hope for unless 
+P = NP.
+This result was generalized by Sviridenko to a general monotone submodular function maximization
+under knapsack constraint. 
+This algorithm requires $O(n^5)$ calls to the value oracle.
+A faster algorithm, presented by Khuller et. al for the Budgeted Maximum Cover and later 
+generalized by Krause and Guestrin for a general monotone submodular function, 
+requires only $O(n^2)$ calls to the value oracle that 
+achieves a $1-e^{-1/2}$ approximation ratio is known.
+The analysis of this algorithm, however, has a logical flaw 
+(in the above and other papers as well). 
+In this paper we fix this flaw and show that indeed this algorithm achieves a $1-e^{-1/2}$ 
+approximation ratio, we also consider a modification of this algorithm with 
+the same running time and show that it achieves a better approximation ratio.  
+  
