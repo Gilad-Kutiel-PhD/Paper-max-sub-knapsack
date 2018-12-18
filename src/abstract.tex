@@ -4,13 +4,14 @@ P = NP.
 This result was generalized by Sviridenko to a general monotone submodular function maximization
 under knapsack constraint. 
 This algorithm requires $O(n^5)$ calls to the value oracle.
-A faster algorithm, presented by Khuller et. al for the Budgeted Maximum Cover and later 
-generalized by Krause and Guestrin for a general monotone submodular function, 
-requires only $O(n^2)$ calls to the value oracle that 
-achieves a $1-e^{-1/2}$ approximation ratio is known.
+A faster algorithm was presented by Khuller et. al for the Budgeted Maximum Cover.  
+This algorithm runs in time $O(n^2)$ and its approximation ratio is at least $1-e^{-1/2}$.
+Krause and Guestrin extend the analysis of this algorithm
+for a general monotone submodular function maximization. 
 The analysis of this algorithm, however, has a logical flaw 
 (in the above and other papers as well). 
-In this paper we fix this flaw and show that indeed this algorithm achieves a $1-e^{-1/2}$ 
-approximation ratio, we also consider a modification of this algorithm with 
+In this paper we fix this flaw and show that indeed the approximation ratio of this
+algorithm is at least $1-e^{-1/2}$. 
+We also consider a modification of this algorithm with 
 the same running time and show that it achieves a better approximation ratio.  
   
