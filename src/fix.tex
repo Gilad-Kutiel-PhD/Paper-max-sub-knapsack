@@ -1,4 +1,40 @@
-Here we fix the analysis of the modified greedy algorithm.
+Let $O$ be an optimal set and recall that we assume that $f(O) = 1$.
+Let $T = \arg\max\{S, \displaystyle{\arg\max_{e \in U}}f(\{e\})\}$ 
+be the set returned by the modified greedy algorithm, 
+where $S$ is the set computed by the greedy algorithm~\ref{alg:greedy},
+we prove the following theorem:
+
+\begin{theorem}
+$f(T) \geq (1 - e^{-1/2})$.
+\end{theorem}
+
+\begin{proof}
+\end{proof}
+
+\begin{tikzpicture}
+\begin{axis}[
+	domain=0:0.49
+	,ymax=.7
+	,xmax=.51
+	,xlabel=$\delta$
+	,axis lines=left
+	,grid=both
+	,grid style={
+		draw=gray!20
+	}
+	,minor tick num=5
+	,legend pos=outer north east
+	,legend entries={
+		$f(A)$
+		,$f(B|A)$
+		,$f(A) + f(B|A)$
+	}
+]
+  \addplot[blue, dashed, thin]{1-exp(-(0.5-x))};
+  \addplot[red, dotted, thin]{(1 - exp(-(4*x/(1-2*x)))) * (exp(-1/2) - 1 + exp(-(1/2-x)))};
+  \addplot[black, thick]{1-exp(-(0.5-x)) + (1 - exp(-(4*x/(1-2*x)))) * (exp(-1/2) - 1 + exp(-(1/2-x)))};
+\end{axis}
+\end{tikzpicture}
 
 We denote by $x$ and $y$ the first two elements in $O$ dropped by the algorithm.  
 We denote by $A$ the set of elements constructed by the algorithm just before
