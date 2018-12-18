@@ -15,7 +15,7 @@ Thus we assume the algorithm drops at least two elements from $O$ during its run
 Denote by $x$ and $y$ the first and second such elements respectively.
 Denote by $A$ the set of elements chosen by the algorithm just before dropping $x$ and by
 $B$ the set of elements chosen right after dropping $x$ and before dropping $y$.
-If $f(A) \geq 1 - e^{-1/2}$ the theorem hold, otherwise denote $f(A) = 1 - e^{-(1/2 - \delta)}$,
+If $f(A) \geq 1 - e^{-1/2}$ the theorem holds, otherwise denote $f(A) = 1 - e^{-(1/2 - \delta)}$,
 where $\delta$ might be in the range $(0, 0.5)$.  
 
 We argue that the following inequalities hold:
@@ -25,7 +25,7 @@ c(A) \leq 0.5 - \delta
 \\
 c(x) > 0.5 + \delta
 \\
-c(O \setminus x) > 0.5 + \delta
+c(O \setminus x) \leq 0.5 - \delta
 \\
 c(B) > 2\delta
 \\
