@@ -52,6 +52,7 @@ and the best singleton, that is $\arg\max\{S, \displaystyle{\arg\max_{e \in U}}f
 The following lemma plays an important roll in the rest of this paper.
 
 \begin{lemma}
+\label{lemma:main}
 Let $A = \{a_1, \dots, a_k\}$ and $B$ be two subsets such that for all $1 \leq i \leq k$ 
 and for all $e \in B$ it holds that 
 $\frac{f(a_i|A_{i-1})}{c(a_i)} \geq \frac{f(e|A_{i-1})}{c(e)}$
@@ -63,6 +64,9 @@ then $f(A) \geq (1 - e^{-\frac{c(A)}{c(B)})}f(B)$.
 \end{proof}
 
 
+\todo{rephrase}
+In particular, Lemma~\ref{lemma:main} can be applied on a set of consecutive 
+elements picked by the greedy algorithm and compare their value...   
 
 
 
