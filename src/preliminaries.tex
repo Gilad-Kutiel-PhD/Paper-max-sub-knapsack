@@ -47,7 +47,40 @@ can be arbitrarily bad.
 
 Let $S$ be the output of the greedy algorithm, the \emph{Modified Greedy} algorithm 
 returns the best among the output of the greedy algorithm
-and the best singleton, that is $\arg\max\{S, \displaystyle{\arg\max_{e \in U}}f(\{e\})\}$.  
+and the best singleton, that is $\arg\max\{S, \displaystyle{\arg\max_{e \in U}}f(\{e\})\}$,
+Algorithm~\ref{alg:mgreedy} depicts this algorithm.  
+
+\begin{algorithm}[H]
+\label{alg:mgreedy}
+
+\SetKwInOut{Input}{input}
+\SetKwInOut{Output}{output}
+
+\Input{$U = \{e_1, \dots, e_n\}$, $f:2^U\to \mathbb{R}_+$, $c:U \to \mathbb{R}_+$}
+\Output{$S \subseteq U$}
+
+$S \leftarrow \text{greedy}(U, f, c)$
+\\
+\Return{$\arg\max\{S, \displaystyle{\arg\max_{e \in U}}f(\{e\})\}$}
+\caption{Modified Greedy Algorithm}
+\end{algorithm}
+
+We also consider in this paper the \emph{modified modified greedy} algorithm~\ref{alg:mmgreedy}
+
+\begin{algorithm}[H]
+\label{alg:mmgreedy}
+
+\SetKwInOut{Input}{input}
+\SetKwInOut{Output}{output}
+
+\Input{$U = \{e_1, \dots, e_n\}$, $f:2^U\to \mathbb{R}_+$, $c:U \to \mathbb{R}_+$}
+\Output{$S \subseteq U$}
+
+$S \leftarrow \text{greedy}(U, f, c)$
+\\
+\Return{$\arg\max\{S, \displaystyle{\arg\max_{e_1, e_2 \in U}}f(\{e_1, e_2\})\}$}
+\caption{Modified Modified Greedy Algorithm}
+\end{algorithm}
 
 The following lemma plays an important roll in the rest of this paper.
 
