@@ -9,13 +9,50 @@ $f(T) \geq (1 - e^{-1/2})$.
 \end{theorem}
 
 \begin{proof}
-Note that if $|O \setminus T| \leq 1$ then $f(T) \geq 0.5$. 
+We can assume that $f(e) \leq 1 - e^{-1/2}$ for every $e \in U$ or otherwise the proof holds. 
+Note, also, that if $|O \setminus T| \leq 1$ then $f(T) \geq 0.5$. 
 Thus we assume the algorithm drops at least two elements from $O$ during its running. 
 Denote by $x$ and $y$ the first and second such elements respectively.
 Denote by $A$ the set of elements chosen by the algorithm just before dropping $x$ and by
-$B$ the set of elements chosen right after dropping $x$ and before dropping $y$. 
+$B$ the set of elements chosen right after dropping $x$ and before dropping $y$.
+If $f(A) \geq 1 - e^{-1/2}$ the theorem hold, otherwise denote $f(A) = 1 - e^{-(1/2 - \delta)}$,
+where $\delta$ might be in the range $(0, 0.5)$.  
+
+We argue that the following inequalities hold:
+
+\begin{align}
+c(A) \leq 0.5 - \delta 
+\\
+c(x) > 0.5 + \delta
+\\
+c(O \setminus x) > 0.5 + \delta
+\\
+c(B) > 2\delta
+\\
+f(x) < 1 - e^{-1/2}
+\\
+\label{ineq:T}
+f(O \setminus x | A) \geq e^{-1/2} - 1 + e^{-(1/2 - \delta)}
+\\
+\label{ineq:B}
+f(B|A) \geq (1 - e^{-\frac{2\delta}{1/2 - \delta}})f(O \setminus x | A)
+\\
+\label{ineq:T}
+f(T) \geq f(A) + f(B|A)
+\end{align}
+
+\todo{explain the inequalities}.
+
+Substituting $f(A) = 1 - e^{-(1/2 - \delta)}$ 
+and $f(B|A) \geq (1 - e^{-\frac{2\delta}{1/2 - \delta}})f(O \setminus x | A)$
+into the last inequality gives the desired result as can be seen in Figure~\ref{fig:mgreedy}
 \end{proof}
 
+\begin{figure}
+\caption{
+\label{fig:mgreedy}
+Modified Greedy Approximation Ratio
+}
 \begin{tikzpicture}
 \begin{axis}[
 	domain=0:0.49
@@ -40,64 +77,5 @@ $B$ the set of elements chosen right after dropping $x$ and before dropping $y$.
   \addplot[black, thick]{1-exp(-(0.5-x)) + (1 - exp(-(4*x/(1-2*x)))) * (exp(-1/2) - 1 + exp(-(1/2-x)))};
 \end{axis}
 \end{tikzpicture}
-
-We denote by $x$ and $y$ the first two elements in $O$ dropped by the algorithm.  
-We denote by $A$ the set of elements constructed by the algorithm just before
-dropping $x$ and by $B$ the set of elements chosen by the algorithm right after dropping $x$ 
-and just before dropping $y$.
-
-\begin{figure}[h]
-\begin{tikzpicture}[]
-\draw[thin, gray!30] (0,-1) grid (6,1);
-\draw 
-	(0,1) 
-	rectangle ++(2.9,-1) node[pos=.5]{A}
- 	rectangle ++(1,-1) node[pos=.5]{B}
- 	rectangle ++(2.9,+1) node[pos=.5]{y};
-\draw (2.9, 0) rectangle +(3.4,1) node[pos=.5]{x};
-	
-\end{tikzpicture} 
 \end{figure}
 
-Let $c(A) = 1/2 - \delta$ 
-then $c(x) > 1/2 + \delta$, $c(y) \leq 1/2 - \delta$, and $c(B) \geq 2\delta$.
-
-\begin{lemma}
-Let $S$ be any set and $C$ be the set produced by the algorithm 
-before dropping the first element from $S$ then $f(C) \geq (1 - e^{-\frac{c(C)}{c(S)}})f(S)$.  
-\end{lemma} 
-
-\begin{observation}
-$f(A) \geq (1 - e^{\delta - 1/2})f(O)$
-\end{observation}
-
-TODO verify this $\Downarrow$
-\begin{observation}
-$f_A(B) \geq (1 - e^{4\delta / (2\delta - 1)})f_A(O \setminus x)$
-\end{observation}
-
-\begin{observation}
-$f(O \setminus x) \geq e^{-1/2}f(O)$
-\end{observation}
-
-Let $G$ be the set produced by the algorithm, then:
-\begin{proof}
-\def\arraystretch{1.5}
-$$
-\begin{array}{lll}
-% 
-f(G) & \geq f(A) + f_A(B)
-\\& \geq f(A) + (1 - e^{4\delta / (2\delta - 1)})f_A(O \setminus x)
-\\& = f(A) + (1 - e^{4\delta / (2\delta - 1)})(f(A \cup S \setminus x) - f(A))
-\\& = e^{4\delta / (2\delta - 1)}f(A) 
-	+ (1 - e^{4\delta / (2\delta - 1)})f(A \cup S \setminus x)
-\\& \geq e^{4\delta / (2\delta - 1)}(1 - e^{\delta - 1/2})f(O)
-	+ (1 - e^{4\delta / (2\delta - 1)})e^{-1/2}f(O)
-\\& = [
-		e^{4\delta / (2\delta - 1)}(1 - e^{\delta - 1/2}) + (1 - e^{4\delta / (2\delta - 1)})e^{-1/2}
-		]f(O)
-\\&& \geq (1-e^{-1/2})f(O)
-% 
-\end{array}
-$$
-\end{proof}
