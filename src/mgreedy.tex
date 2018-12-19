@@ -81,3 +81,22 @@ Modified Greedy Approximation Ratio
 \end{tikzpicture}
 \end{figure}
 
+\paragraph{Upper Bound}
+In \cite{khuller1999budgeted} it is claimed that the upper bound on the approximation ratio
+of the modified greedy algorithm is at most 0.44, but no explicit instance was given to 
+support this claim and we could not reproduce such an example.
+Here we give a simple example that bound the approximation ratio from above by $1-e^{-2/3}$, 
+leaving a gap between the lower and upper bounds.
+Consider an instance of the budgeted maximum coverage problem where the optimal cover consists
+of 3 disjoint subsets, $S_1, S_2, S_3$ each cover exactly third of the ground set. 
+In this example we assume a uniform weight function, and suppose the cost of each subsets of 
+the optimal solution is $1/3$. We now describe the subsets that the modified greedy algorithm
+may choose. Consider $k + 1$ disjoint subsets $T_1, \dots, T_{k + 1}$ where $c(T_i) = 2/3k$, 
+where subset $T_i$ covers $\frac{2}{3k}(1-\frac{2}{3k})^i$ fraction of the ground set.
+One can verify that the modified greedy algorithm might chose those sets leaving no budget for
+any of the optimal subsets. As $k$ approaches infinity the total value of those sets approches
+$1-e^{-2/3}$. 
+
+
+
+  
