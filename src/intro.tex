@@ -7,8 +7,8 @@ The goal is to find a collection of sets $\mathcal{S'} \subseteq \mathcal{S}$ su
 total cost of the sets in the collection does not exceed a given budget, $B$, and the 
 total weight of the elements covered by $\mathcal{S'}$ is maximal.
 Khuller et. al \cite{khuller1999budgeted} 
-give a $1-e^{-1}$-approximation algorithm for this problem and show that this is
-the best possible unless P = NP.   
+give a $(1-e^{-1})$-approximation algorithm for this problem and show that this
+is the best possible unless P = NP.   
 
 A set function $f$ is \emph{submodular} if $f(A \cap B) + f(A \cup B) \leq f(A) + f(B)$ 
 for every two sets in the domain of the function. A set function, $f$, is \emph{monotone} if 
@@ -26,7 +26,7 @@ This algorithm requires $O(n^5)$ calls to the value oracle.
 
 A faster algorithm that runs in $O(n^2)$ time and achieves a $1 - e^{-1/2}$ approximation ratio
 was also presented in \cite{khuller1999budgeted}. 
-It was shown by by Krause and Guestrin \cite{krause2005note} that the same algorithm 
+It was shown by Krause and Guestrin \cite{krause2005note} that the same algorithm 
 gives that same guarantee for a general monotone submodular function and requires only 
 $O(n^2)$ calls to the value oracle.
 In the above papers (and other papers as well), however, 
