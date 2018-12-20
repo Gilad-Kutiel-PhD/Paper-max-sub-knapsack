@@ -92,7 +92,8 @@ of 3 disjoint subsets, $S_1, S_2, S_3$ each cover exactly third of the ground se
 In this example we assume a uniform weight function, and suppose the cost of each subsets of 
 the optimal solution is $1/3$. We now describe the subsets that the modified greedy algorithm
 may choose. Consider $k + 1$ disjoint subsets $T_1, \dots, T_{k + 1}$ where $c(T_i) = 2/3k$, 
-where subset $T_i$ covers $\frac{2}{3k}(1-\frac{2}{3k})^i$ fraction of the ground set.
+where subset $T_i$ covers $\frac{2}{3k}(1-\frac{2}{3k})^i$ fraction of the ground set and for
+every $i$ it holds that $|T_i \cap S_1| = |T_i \cap S_2| = |T_i \cap S_3|$.
 One can verify that the modified greedy algorithm might chose those sets leaving no budget for
 any of the optimal subsets. As $k$ approaches infinity the total value of those sets approches
 $1-e^{-2/3}$. 
