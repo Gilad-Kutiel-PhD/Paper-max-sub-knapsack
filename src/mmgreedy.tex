@@ -7,6 +7,7 @@ the algorithm.
 $f(S) \geq 1 - e^{-(1/2 + \epsilon)}$
 \end{theorem}
 
+\def\eps{0.166}
 \begin{proof}
 We can assume that $f(\{e_1, e_2\}) \leq 1 - e^{-1/2 + \epsilon}$ 
 for every $e_1, e_2 \in U$ or otherwise the proof holds.
@@ -14,7 +15,7 @@ Note, also, that if $|O \setminus T| \leq 2$ then $f(T) \geq 0.5$.
 Thus we assume the algorithm drops at least three elements from $O$ during its running.
 Let $x$ be the first element in $O$ that was dropped by the algorithm, 
 and let $A$ be the set of elements chosen by the algorithm just before dropping $x$.
-If $f(A) \geq 1 - e^{-1/2}$ the theorem holds, 
+If $f(A) \geq 1 - e^{-(1/2 + \epsilon)}$ the theorem holds, 
 otherwise denote $f(A) = 1 - e^{-(1/2 + \epsilon - \delta)}$.
 We say that an element, $e$, is \emph{expensive} if $c(e) \ge 1/4 + \epsilon/2 - \delta/2$, 
 otherwise it is \emph{cheap}.
@@ -34,8 +35,6 @@ c(x) > 0.5 -\epsilon + \delta
 \\
 c(C) \leq 0.5 + \epsilon - \delta
 \\
-c(B) > 2\delta
-\\
 f(C) \ge e^{-1/2 + \epsilon}
 \\
 c(B) \ge 1/4 - 3\epsilon/2 + 3\delta/2
@@ -50,23 +49,22 @@ f(T) \geq \max_\epsilon \min \{1 - e^{-(0.5 + \epsilon)}, \min_{\delta} f(A) + f
 \end{align}
 \todo{explain the inequalities}.
 
-Substituting $f(A) = 1 - e^{-(1/2 - \delta)}$ into the last inequality, 
+Substituting $f(A) = 1 - e^{-(1/2 + \epsilon - \delta)}$ into the last inequality, 
 using $f(B|A) \ge \left[
 e^{-(1/2 + \epsilon)}
 - (1 - e^{-(1/2 + \epsilon - \delta)})
 \right]
 (1-e^{-\frac{1-6\epsilon+6\delta}{2+4\epsilon-4\delta}})
 $,
-and setting (say) $\epsilon = 0.104$ gives the desired result 
+and setting (say) $\epsilon = \eps$ gives the desired result 
 as can be seen in Figure~\ref{fig:mmgreedy}.
 
 \end{proof}
 
 \begin{figure}
-\def\eps{0.104}
 \caption{
 \label{fig:mmgreedy}
-Modified Modified Greedy Approximation Ratio ($\epsilon = 0.104$)
+Modified Modified Greedy Approximation Ratio ($\epsilon = \eps$)
 }
 \begin{tikzpicture}
 \begin{axis}[
@@ -95,6 +93,9 @@ Modified Modified Greedy Approximation Ratio ($\epsilon = 0.104$)
   	(1 - exp(-(1 - 6 * \eps + 6 * x)/(2 + 4 * \eps - 4 * x)))
   	*
   	(exp(-(0.5 + \eps) - 1 + exp(-(0.5 + \eps - x))))
+  };
+  \addplot[black, dashed]{
+  	1-exp(-(0.5 + \eps))
   };
   \addplot[black, thick]{
   	1-exp(-(0.5 + \eps -x))
