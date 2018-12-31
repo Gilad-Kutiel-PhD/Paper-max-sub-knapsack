@@ -7,7 +7,7 @@ the algorithm.
 $f(S) \geq 1 - e^{-(1/2 + \epsilon)}$
 \end{theorem}
 
-\def\eps{0.166}
+\def\eps{0.104}
 \begin{proof}
 We can assume that $f(\{e_1, e_2\}) \leq 1 - e^{-1/2 + \epsilon}$ 
 for every $e_1, e_2 \in U$ or otherwise the proof holds.
@@ -85,6 +85,7 @@ Modified Modified Greedy Approximation Ratio ($\epsilon = \eps$)
 	,legend entries={
 		$f(A)$
 		,$f(B|A)$
+		,$1-e^{-(0.5 + \epsilon)}$
 		,$f(A) + f(B|A)$
 	}
 ]
@@ -92,7 +93,7 @@ Modified Modified Greedy Approximation Ratio ($\epsilon = \eps$)
   \addplot[red, dotted, thin]{
   	(1 - exp(-(1 - 6 * \eps + 6 * x)/(2 + 4 * \eps - 4 * x)))
   	*
-  	(exp(-(0.5 + \eps) - 1 + exp(-(0.5 + \eps - x))))
+  	(exp(-(0.5 + \eps)) - 1 + exp(-(0.5 + \eps - x)))
   };
   \addplot[black, dashed]{
   	1-exp(-(0.5 + \eps))
@@ -102,7 +103,7 @@ Modified Modified Greedy Approximation Ratio ($\epsilon = \eps$)
   	+
   	(1 - exp(-(1 - 6 * \eps + 6 * x)/(2 + 4 * \eps - 4 * x)))
   	*
-  	(exp(-(0.5 + \eps) - 1 + exp(-(0.5 + \eps - x))))
+  	(exp(-(0.5 + \eps)) - 1 + exp(-(0.5 + \eps - x)))
   };
 \end{axis}
 \end{tikzpicture}
