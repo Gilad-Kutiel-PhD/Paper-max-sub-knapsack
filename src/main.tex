@@ -559,8 +559,9 @@ in each bucket have the same value to a factor of $(1+\epsilon)$.
 The algorithm then extends the set of smallest cost in  each bucket
 to a solution using the algorithm $\mA$.  The algorithm returns the
 best between the solutions found using the buckets and $\mA$, the pair of
-elements with maximal profit, the single element with maximal profit, and the result of the greedy algorithm
-over the input instance.
+elements with maximal profit, the single element with maximal profit, and the result of the greedy algorithm over the input instance.
+
+We remark that while the proofs of our claims regarding the amplification framework are a bit long and involved, the resulting amplified algorithm is simple and comes down to choosing a constant number of pairs of elements and extending them to complete solutions using the given (unamplified) algorithm as a black-box.
 
 \begin{algorithm}
 	\caption{Amplify($\mA, U, f, c, \beta, \epsilon, \rho$)}
