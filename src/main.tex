@@ -244,7 +244,75 @@ Section \ref{sec:ModifiedGreedy} contains a correct proof of the fast algorithm 
 Lastly, Section \ref{sec:Amplification} describes our amplification method. 
 
 \section{Preliminaries}\label{sec:Preliminaries}
-\input{preliminaries}
+First, we start with some notations that will enable us to simplify the presentation of the algorithms and their proofs.
+We use the notation of $f(B|A)$ to denote the marginal value of $B$ with respect to $A$, {\em i.e.}, $f(A\cup B)-f(A)$.
+When it is clear from the context we use $x$, where $x\in U$, to denote the set $\{ x\}$.
+For any subset $A\subseteq U$ we denote by $c(A)\triangleq \sum _{x\in A}c(x)$.
+Moreover, for an ordered set $A = \{a_1, \dots, a_k\}$ we use $A_i$ to denote its prefix of size $i$, {\em i.e.}, $\{a_1, \dots, a_i\}$ ($A_0$ is set to the empty set).
+Since $f$ is monotone and non-negative, we can assume without loss of generality that $f(\emptyset)=0$.
+
+Second, let us present known fast algorithms for \SK.
+The greedy algorithm for \SK which uses the ``bang per buck'' greedy rule appears in Algorithm \ref{alg:greedy}.
+It receives as parameters the ground set $U$, the submodular objective $f$ (via its value oracle), the cost function $c$, and the budget $\beta$.
+
+\begin{algorithm}[H]
+\caption{Greedy$(U, f, c, \beta)$}
+\label{alg:greedy}
+$S \leftarrow \emptyset$
+\\
+\While{$U \neq \emptyset$}{
+	$e' \leftarrow \displaystyle{\argmax}\left\{\nicefrac[]{f(e|S)}{c(e)}:e\in U\right\}$
+	\\
+	$U \leftarrow U \setminus \{e'\}$
+	\\
+	\If{$c(S \cup \{e'\})\leq \beta$}{
+		\label{line:dropped}
+		$S \leftarrow S \cup \{e'\}$
+	}
+}
+\Return{S}.
+\end{algorithm}
+
+If the condition in line \ref{line:dropped} is evaluated to false we say that
+the algorithm \emph{dropped} the element $e'$.
+It is well known that in general the approximation ratio of Algorithm \ref{alg:greedy}
+can be arbitrarily bad.
+
+Khuller {\em et. al.} \cite{khuller1999budgeted} presented the Modified Greedy algorithm, which returns the best between the greedy algorithm (Algorithm \ref{alg:greedy}) and the single best element.
+This appears in Algorithm \ref{alg:mgreedy} (its input is identical to that of Algorithm \ref{alg:greedy}).
+
+\begin{algorithm}[H]
+\caption{Modified Greedy$(U, f, c, \beta)$}
+\label{alg:mgreedy}
+
+$S \leftarrow \text{Greedy}(U, f, c, \beta)$
+\\
+$T \leftarrow \argmax\left\{S, \argmax \left\{f(e):e\in U, c(e)\leq \beta \right\} \right\}$
+\\
+\Return{$T$}
+\end{algorithm}
+
+Third and last, we present a lemma (can be derived from, {\em e.g.}, \cite{khuller1999budgeted}) that enables one to analyze the performance of the greedy algorithm (Algorithm \ref{alg:greedy}).
+\begin{lemma}
+\label{lemma:sub-main}
+Let $A = \{a_1, \dots, a_k\}$ and $B$ be two subsets such that for all $1 \leq i \leq k$
+and for all $e \in B$ it holds that
+$\frac{f(a_i|A_{i-1})}{c(a_i)} \geq \frac{f(e|A_{i-1})}{c(e)}$.
+Then, $f(A) \geq (1 - e^{-\frac{c(A)}{c(B)}})f(B)$.
+\end{lemma}
+
+The proof for the lemma is given in Appendix  \ref{appendix:omitted}. We note that 
+the proof only uses standard techniques from previous works.
+
+A particular corollary of the above lemma is that if $A$ is the set of elements chosen by the greedy algorithm in
+the $k$ first iterations and $B$ is any subset such that no element from $B$ was dropped by the greedy algorithm in the first $k$ iterations,
+then all the condition of Lemma~\ref{lemma:sub-main} are met and it can be applied to lower bound the value of $A$.
+
+
+
+
+
+
 
 \section{Correct Proof for Approximation Factor of Modified Greedy}\label{sec:ModifiedGreedy}
 \input{mgreedy}
