@@ -34,10 +34,6 @@
 
 
 
-\newcommand{\SK}{{\textsc{Submodular Knapsack}}\xspace}
-
-
-
 \begin{document}
 \maketitle
 
@@ -150,7 +146,8 @@ The \SK problem admits an algorithm that runs in time $O(n^2)$ and achieves an a
 \noindent {\bf{Amplification:}} We present a general method for ``amplifying'' algorithms for \SK.
 Specifically, given any black box algorithm $\mathcal{A}$ that obtains an approximation guarantee of $r$ and a number $k\in \mathbb{N}$ of executions, we show how to obtain a new algorithm for \SK with a better approximation than $r$ and a running time that equals $k$ times the running time of the black box algorithm plus an additional  $3n^2/2+n$ oracle queries.
 This is summarized in the following theorem.
-\begin{theorem}\label{thrm:Amplification}
+\begin{theorem}
+	\label{thrm:Amplification}
 Let $\mathcal{A}$ be an algorithm for the \SK problem achieving an approximation of $r$, where $r< \nicefrac[]{1}{2}$.
 Let $k\geq \max \left\{2, -\frac{\log_2(A(\ln 2))}{\log_2(\nicefrac[]{1}{r} -1 ) }+1 \right\}$.
 Then there exists an uses $3n^2/2+n$ oracle queries plus $k$ times the running time of $\mathcal{A}$ and achieves an approximation of $r^*$, where:
@@ -759,7 +756,6 @@ B(\alpha ) D(\alpha ) f(O)
 			\right)
 			f(\pLarge)
 			+ rf(O)
-			\label{eq:sub:bucket}
 			\end{align*}
 			
 			As $\epsilon\leq \frac{1-2r}{r}$ one can deduce that
@@ -836,8 +832,7 @@ Algorithm \ref{algorithm:amplify} uses $\floor{\log_{1+\epsilon} \frac{1}{\rho}}
 \end{proof}
 
 
-
-\bibliographystyle{plainurl}
+\bibliographystyle{plain}
 \bibliography{main}
 
 \appendix
