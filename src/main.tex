@@ -52,7 +52,7 @@ We believe that our amplification method might be of independent interest.
 Submodularity is a fundamental mathematical notion that captures the concept of economy of scale and is prevalent in many areas of science and technology.
 Given a ground set $U$ a set function $f:2^U \to \mathbb{R}_+$ over $U$ is called \emph{submodular} if it has the \emph{diminishing returns} property:
 $f(A \cup \{a\}) - f(A) \geq f(B \cup \{a\}) - f(B)$ for every $A \subseteq B \subseteq U$ and $a \in U \setminus B$.\footnote{
-    An equivalent definition is: $f(A) + f(B) \geq f(A \cup B) + f(A \cup B)$ for every $A,B \in U$.
+    An equivalent definition is: $f(A) + f(B) \geq f(A \cup B) + f(A \cap B)$ for every $A,B \in U$.
 }
 Submodular functions naturally arise in different disciplines such as combinatorics, graph theory, probability, game theory, and economics.
 Some well known examples include coverage functions, cuts in graphs and hypergraphs, matroid rank functions, entropy, and budget additive functions.
@@ -149,7 +149,7 @@ This is summarized in the following theorem.
 	\label{thrm:Amplification}
 Let $\mathcal{A}$ be an algorithm for the \SK problem achieving an approximation of $r$, where $r< \nicefrac[]{1}{2}$.
 Let $k\geq \max \left\{2, -\frac{\log_2(A(\ln 2))}{\log_2(\nicefrac[]{1}{r} -1 ) }+1 \right\}$.
-Then there exists an uses $3n^2/2+n$ oracle queries plus $k$ times the running time of $\mathcal{A}$ and achieves an approximation of $r^*$, where:
+Then there exists an algorithm that uses $3n^2/2+n$ oracle queries plus $k$ times the running time of $\mathcal{A}$ and achieves an approximation of $r^*$, where:
 \begin{enumerate}
 \item $r^* = \max _{0< \alpha \leq \ln{2}} \left\{ \min \left\{ 1-e^{-\alpha},D(\alpha)+(1-r)\left( \frac{2+\nu(\alpha)}{1+\nu(\alpha)} (1-D(\alpha)) -1\right)\right\}\right\}$.
 \item $ D(\alpha)=(1-e^{-\alpha})/B(\alpha)$.
@@ -159,7 +159,7 @@ Then there exists an uses $3n^2/2+n$ oracle queries plus $k$ times the running t
 \end{enumerate}
 \end{theorem}
 
-Given any black box algorithm $\mathcal{A}$ for \SK Theorem \ref{thrm:Amplification} can be used to answer two interesting questions: $(1)$ given an upper on the running time of the algorithm what is the best approximation that can be obtained using our amplification framework? $(2)$ given a target approximation guarantee what is the required running time using our amplification framework?
+Given any black box algorithm $\mathcal{A}$ for \SK Theorem \ref{thrm:Amplification} can be used to answer two interesting questions: $(1)$ given an upper bound on the running time of the algorithm what is the best approximation that can be obtained using our amplification framework? $(2)$ given a target approximation guarantee what is the required running time using our amplification framework?
 For example, choosing the black box algorithm $\mathcal{A}$ to be the algorithm whose existence is guaranteed by Theorem \ref{thrm:ModifiedSquared}, amplifying it with $k=6$ we can obtain an algorithm achieving an improved approximation of $0.48$ and only uses  $10.5n^2+7n$ oracle queries.
 Moreover, one can repeatedly apply the amplification, each time with a suitable choice of $k$, obtaining an approximation guarantee that approaches $\nicefrac[]{1}{2}$.
 
@@ -333,7 +333,7 @@ Let $O$ be an optimal solution, and recall that $T$ is the output of Algorithm~\
 	$$
 	f(O) \leq f(O \cup S) \leq f(O \setminus S) + f(S) \leq f(e^*) + f(S).
 	$$
-	The above implies that either $f(S) \geq \frac{1}{2}f(O)$ or $f(e) \geq \frac{1}{2}f(O)$ concluding the proof for this case.
+	The above implies that either $f(S) \geq \frac{1}{2}f(O)$ or $f(e^*) \geq \frac{1}{2}f(O)$ concluding the proof for this case.
 	Otherwise, $|O \setminus S| \geq 2$.
 	Denote by $a$ and $b$ the first and second elements of $O$ the greedy algorithm drops, {\em i.e.} $a$ is the considered element at the first time the condition in line~\ref{line:dropped} of Algorithm~\ref{alg:greedy} is evaluated to false and $b$ is the considered element the second time the same condition is evaluated to false.
 	Denote by $A$ the set of elements chosen by the algorithm just before dropping $a$ and by
@@ -410,7 +410,7 @@ We prove that Algorithm \ref{alg:mmgreedy} achieves the guarantee claimed in The
 \begin{algorithm}
 	$S \leftarrow \text{greedy}(U, f, c, \beta)$
 	\\
-	$T \leftarrow \arg\max\{S, \argmax \{ f(\{ e1,e2\}):e1,e2\in U, c(\{e_1, e_2\} ) \leq \beta \} \}$
+	$T \leftarrow \arg\max\{S, \argmax \{ f(\{ e_1,e_2\}):e_1,e_2\in U, c(\{e_1, e_2\} ) \leq \beta \} \}$
 	\\
 	\Return{T}
 	%
@@ -543,7 +543,7 @@ be used to derive an $r'$-approximation, $r<r' <1/2$, for
 for $\mA$ and $\frac{3n^2}{2}+n$ oracle queries.
 
 Algorithm \ref{algorithm:amplify} receives
-an approximation algorithm $\mA$ for $\SK$,ƒo
+an approximation algorithm $\mA$ for $\SK$,for
 a universe $U$, a monotone non-negative
 submodular function $f:2^U \rightarrow \mathbb{R}$,
 a non-negative cost function $c:U \rightarrow \mathbb{R}$, and a budget $\beta$.
@@ -632,7 +632,7 @@ $$ A(\alpha) = \frac{1}{1-e^{-\alpha}}-\frac{1}{B(\alpha)}$$
 	If $O\setminus \pLarge \subseteq G$, then
 	$f(G)+ f(\pVal)\geq f(O\setminus \pLarge) + f(\pLarge) \geq f(O)$.
 	Therefore $f(G)\geq \frac{f(O)}{2}$ or $f(\pVal)\geq \frac{f(O)}{2}$
-	thus the Lemma holds (note that $\alpha \leq ln 2$ and therefore
+	thus the Lemma holds (note that $\alpha \leq \ln 2$ and therefore
 	$1-e^{-\alpha} < \frac{1}{2}$). Thus we can assume that
 	$O\setminus \pLarge \nsubseteq G$.
 	
@@ -697,11 +697,13 @@ B(\alpha ) D(\alpha ) f(O)
 	\begin{proof}
 		As $f(G)< (1-e^{-\alpha})$, the condition of corollary \ref{corollary:cor1} does not hold. Therefore
 		$f(O|\pLarge)< D(\alpha) f(O)$. Hence,
-		$$f(O)= f(\pLarge) + f(O|\pLarge) < f(\pLarge) + D(\alpha) f(O)$$
+		$$f(O)= f(\pLarge) + f(O|\pLarge) < f(\pLarge) + D(\alpha) f(O).$$
 		By rearranging the terms and using $f(\pVal) < (1-e^{-\alpha})f(O)$
 		we get
-		$$f(\pLarge) > (1-D(\alpha)) f(O) > \frac{1-D(\alpha)}{1-e^{-\alpha}} f(\pVal)
-		= \left(\frac{1}{1-e^{-\alpha}} - \frac{D(\alpha)}{1-e^{-\alpha}}\right) f(\pVal) = A(\alpha) f(\pVal)$$
+		$$
+		f(\pLarge) > (1-D(\alpha)) f(O) > \frac{1-D(\alpha)}{1-e^{-\alpha}} f(\pVal)
+		= \left(\frac{1}{1-e^{-\alpha}} - \frac{D(\alpha)}{1-e^{-\alpha}}\right) f(\pVal) = A(\alpha) f(\pVal).
+		$$
 		The second inequality uses the observation that $D(\alpha) \leq 1$ for $0\leq \alpha \leq 1$ which can be easily verified. The last equality follows from the definitions
 		of $D(\alpha)$ and $A(\alpha)$.
 		
@@ -712,7 +714,7 @@ B(\alpha ) D(\alpha ) f(O)
 		\label{corollary:cor3}
 			If $f(G)< (1-e^{-\alpha})f(O)$ and $f(\pVal) < (1-e^{-\alpha})f(O)$ then
 			there is $i\in \{0, \ldots, i_{\max}\}$ such that
-		$$\frac{f(S_i)}{f(O)} \geq D(\alpha) + (1-r)\left( \frac{2+\epsilon}{1+\epsilon} D(\alpha) -1 \right)$$
+		$$\frac{f(S_i)}{f(O)} \geq D(\alpha) + (1-r)\left( \frac{2+\epsilon}{1+\epsilon} D(\alpha) -1 \right).$$
 	\end{corollary}
 \begin{proof}
 		As the conditions of corollary \ref{corollary:cor2} hold, we have
@@ -735,7 +737,7 @@ B(\alpha ) D(\alpha ) f(O)
 			As $c(P_i) \leq c(\pLarge)$ we get that $O\setminus \pLarge$
 			is a feasible solution for the problem instance given to $\mA$.
 			Hence, as $\mA$ is a $r$-approximation we get
-			$$f(Q_i | P_i) \geq r f(O\setminus \pLarge| P_i)$$
+			$$f(Q_i | P_i) \geq r f(O\setminus \pLarge| P_i).$$
 			Therefore,
 			\begin{align*}
 			f(S_{i})
@@ -804,15 +806,15 @@ Algorithm \ref{algorithm:amplify} uses $\floor{\log_{1+\epsilon} \frac{1}{\rho}}
 
 
 \begin{proof}[Proof of Theorem \ref{thrm:Amplification}]
-	Let $$\alpha^*  = \argmax _{0<\alpha \leq \ln{2}} \left\{ \min \left\{ 1-e^{-\alpha},D(\alpha)+(1-r)\left( \frac{2+\nu(\alpha)}{1+\nu(\alpha)} (1-D(\alpha)) -1\right)\right\}\right\}$$
+	Let $$\alpha^*  = \argmax _{0<\alpha \leq \ln{2}} \left\{ \min \left\{ 1-e^{-\alpha},D(\alpha)+(1-r)\left( \frac{2+\nu(\alpha)}{1+\nu(\alpha)} (1-D(\alpha)) -1\right)\right\}\right\}.$$
 	We obtain the described approximation ratio when running the algorithm
 	with $\epsilon = \nu(\alpha^*)$ and $\rho = A(\alpha^*)$.
 	By the conditions of the theorem,
-	$$k \geq -\frac{\log A(\ln 2)} { \log(\nicefrac[]{1}{r} -1 ) } +1 \geq-\frac{\log A(\alpha*)} { \log(\nicefrac[]{1}{r} -1 ) } +1 $$
+	$$k \geq -\frac{\log A(\ln 2)} { \log(\nicefrac[]{1}{r} -1 ) } +1 \geq-\frac{\log A(\alpha*)} { \log(\nicefrac[]{1}{r} -1 ) } +1 .$$
 	Where the last inequality uses the fact that $A$ is monotonically decreasing.  Thus,
 	$$\epsilon^* = 2 ^{-\frac{\log_2 (A(\alpha^*))}{k-1}} -1 \leq \
 	2 ^{-\frac{ \log_2(A(\alpha^*))}{  -\left(\frac{\log_2(A(\alpha* ))}{\log_2(\nicefrac[]{1}{r}-1)} \right) }} -1  =
-	2^{\log_2(\nicefrac[]{1}{r}-1)} -1 = \nicefrac[]{1}{r}-2 = \frac{1-2r}{r} $$
+	2^{\log_2(\nicefrac[]{1}{r}-1)} -1 = \nicefrac[]{1}{r}-2 = \frac{1-2r}{r} .$$
 	therefore the conditions of Lemma \ref{lemma:amplification} apply,
 	and the approximation ratio follows.
 	
