@@ -129,7 +129,7 @@ This results in an approximation of $(1-\nicefrac[]{1}{e}-\nicefrac[]{1}{4})$, w
 %For example, the ng time of the latter algorithm for $\epsilon = 2^{-2}$ is
 %$2^{2O(2^{8})}n\log^2n$ achieving approximation ratio of $\approx 0.38$.
 
-Another line of research examines the adaptive complexity of submodular maximization, that is the goal is to design approximation algorithms that are faster if parallelization is allowed. 
+Another line of research examines the adaptive complexity of submodular maximization, that is the goal is to design approximation algorithms that are faster if (polynomial) parallelization is allowed. 
 Balkanski and Singer developed a $1/3$-approximation algorithm for monotone submodular maximization with cardinality constraint that needs only $O(\log n)$ sequential rounds.
 They also showed that no algorithm can achieve a better approximation than $O(\frac{1}{\log n})$ with fewer than $O(\frac{\log n}{\log\log n})$ \cite{balkanski2018adaptive}.
 Three independent works design an algorithm with approximation ratio of $1 - \frac{1}{e} - \varepsilon$ and $O(\log n)$ sequential rounds \cite{fahrbach2019submodular, balkanski2019exponential, ene2019submodular}.
