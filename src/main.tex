@@ -1,22 +1,32 @@
 \nonstopmode
-\documentclass[a4paper]{article}
+\documentclass[11pt,a4, english]{article}
 \usepackage[in]{fullpage}
 \usepackage{authblk}
+
+\usepackage{times}
+\usepackage{cite}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{ifpdf}
+\ifpdf    % we are running pdflatex
+\usepackage{hyperref}
+\else    % we are running latex
+\usepackage[hypertex]{hyperref}
+\fi
 
 \input{libs}
 \input{def}
 
-\title{A Fast and Simple Algorithm for Submodular Maximization with a Knapsack Constraint}
-% \titlerunning{A Fast and Simple Algorithm for Submodular Knapsack}
-
-\author[1]{Ariel Kulik\thanks{kulik@cs.technion.ac.il}}
-\author[1]{Gilad Kutiel\thanks{gkutiel@cs.technion.ac.il}}
-\author[1]{Roy Schwartz\thanks{schwartz@cs.technion.ac.il}}
-% \author{Gilad Kutiel}{Department of Computer Science, Technion, Haifa, Israel}{gkutiel@cs.technion.ac.il}{}{}
-% \author{Roy Schwartz}{Department of Computer Science, Technion, Haifa, Israel}{schwartz@cs.technion.ac.il}{}{}
-% \authorrunning{A.\,Kulik and G.\,Kutiel and R.\,Schwartz}
-
-\affil[1]{Department of Computer Science, Technion, Haifa, Israel}
+%\title{A Fast and Simple Algorithm for Submodular Maximization with a Knapsack Constraint}
+%% \titlerunning{A Fast and Simple Algorithm for Submodular Knapsack}
+%
+%\author[1]{Ariel Kulik\thanks{kulik@cs.technion.ac.il}}
+%\author[1]{Gilad Kutiel\thanks{gkutiel@cs.technion.ac.il}}
+%\author[1]{Roy Schwartz\thanks{schwartz@cs.technion.ac.il}}
+%% \author{Gilad Kutiel}{Department of Computer Science, Technion, Haifa, Israel}{gkutiel@cs.technion.ac.il}{}{}
+%% \author{Roy Schwartz}{Department of Computer Science, Technion, Haifa, Israel}{schwartz@cs.technion.ac.il}{}{}
+%% \authorrunning{A.\,Kulik and G.\,Kutiel and R.\,Schwartz}
+%
+%\affil[1]{Department of Computer Science, Technion, Haifa, Israel}
 
 % \Copyright{Ariel Kulik and Gilad Kutiel and Roy Schwartz}
 % \ccsdesc{}
@@ -40,19 +50,27 @@
 
 
 \begin{document}
+\title{A {\color{red}{Truly}} Fast and Simple Algorithm for Submodular Maximization with a Knapsack Constraint}
+\author[1]{}
+\pagenumbering{arabic}
+\date{}
 \maketitle
 
 \begin{abstract}
 We consider the problem of maximizing a monotone submodular function with a knapsack constraint.
 In this work we aim at finding fast and simple algorithms for the problem.
-Previously, the best fast and simple algorithm is that of Khuller {\em et. al.} [IPL`99] which runs in time $O(n^2)$ and achieves an approximation guarantee of $(1-e^{-\nicefrac[]{1}{2}})\approx 0.393 $.
+Previously, the best fast and simple algorithm is that of Khuller {\em et al.} [IPL`99] which runs in time $O(n^2)$ and achieves an approximation guarantee of $(1-e^{-\nicefrac[]{1}{2}})\approx 0.393 $.
 We present a new fast and simple algorithm which retains the same running time and has an improved approximation guarantee of $0.4536$.
 %At the heart of our analysis lies a method that enables us to better analyze the greedy ``bang per buck'' algorithm in the presence of elements with varying cost.
 Moreover, we present a general method for ``amplifying'' the approximation factor of any algorithm for the problem, while losing little in the constants of the running time.
 Applying this amplification to our new algorithm enables us to further improve the results obtained.
 We believe that our amplification method might be of independent interest.
-
 \end{abstract}
+
+\thispagestyle{empty}
+\newpage
+\clearpage
+\setcounter{page}{1}
 
 \section{Introduction}
 Submodularity is a fundamental mathematical notion that captures the concept of economy of scale and is prevalent in many areas of science and technology.
@@ -72,7 +90,7 @@ This need stems from the sheer scale of the applicability of submodular maximiza
 
 
 
-In this paper we consider the problems of maximizing a monotone\footnote{
+In this paper we consider the problem of maximizing a monotone\footnote{
     $f$ is monotone if $f(S) \leq f(T)$ for every $S \subseteq T \subseteq U$.
 } submodular function given a knapsack constraint.
 %{\color{red}{ROY: ADD APPLICATIONS SPECIFIC TO OUR PROBLEM HERE WITH A SHORT EXPLANATION}}.
@@ -86,21 +104,27 @@ In this work we aim to find {\em fast} and {\em simple} algorithms for the \SK p
 We assume the standard value oracle model, where the algorithm can access the objective $f$ via queries of the form: ``what is $f(S)$?'' for every $S\subseteq U$.
 The running time is the total number of value oracle queries and numerical operations performed by the algorithm. In all our algorithms the former dominates the later, and thus we are satisfied with counting the number of oracle queries alone.
 
-Building upon the work of Khuller {\em et. al.} \cite{khuller1999budgeted}, Sviridenko \cite{sviridenko2004note} presented a tight approximation of $(1-\nicefrac[]{1}{e})\approx 0.632$ for \SK.
+Building upon the work of Khuller {\em et al.} \cite{khuller1999budgeted}, Sviridenko \cite{sviridenko2004note} presented a tight approximation of $(1-\nicefrac[]{1}{e})\approx 0.632$ for \SK.
 The algorithm of \cite{sviridenko2004note} returns the best of all subsets of $U$ of size at most three, where each subset of size three is greedily extended by the standard greedy rule that maximizes the ``bang per buck''.
 This results in an impractical algorithm whose running time is $O(n^5)$.
-A fast algorithm whose running time is just that of the greedy algorithm, {\em i.e.}, $O(n^2)$, was given by \cite{khuller1999budgeted} and it achieves a worse approximation of $(1-e^{-\nicefrac[]{1}{2}})\approx 0.393$.\footnote{Khuller {\em et. al.} \cite{khuller1999budgeted} considered the special case where the objective is a coverage function. This was later extended by Krause and Guestrin \cite{krause2005note} and Lin and Bilmes \cite{LB10} to a general monotone submodular objective.}
+A fast algorithm whose running time is just that of the greedy algorithm, {\em i.e.}, $O(n^2)$, was given by \cite{khuller1999budgeted} and it achieves a worse approximation of $(1-e^{-\nicefrac[]{1}{2}})\approx 0.393$.\footnote{Khuller {\em et al.} \cite{khuller1999budgeted} considered the special case where the objective is a coverage function. This was later extended by Krause and Guestrin \cite{krause2005note} and Lin and Bilmes \cite{LB10} to a general monotone submodular objective.}
 
 
 Deviating from the above combinatorial approach of \cite{khuller1999budgeted,sviridenko2004note} to \SK, Badanidiyuru and Vondr\'{a}k \cite{badanidiyuru2014fast} initiated a different line of research based on both continuous and discrete techniques.
-They presented an algorithm achieving an approximation of $(1-\nicefrac[]{1}{e}-\varepsilon)$ whose running time is $O(n^2(\varepsilon ^{-1}\log n)^{\text{poly}(\varepsilon^{-1})})$, for every constant $\varepsilon >0$.
+They presented an algorithm achieving an approximation of $(1-\nicefrac[]{1}{e}-\varepsilon)$ whose running time equals $O(n^2(\varepsilon ^{-1}\log n)^{\text{poly}(\varepsilon^{-1})})$, for every constant $\varepsilon >0$.
 %In contrast to the combinatorial approach of \cite{khuller1999budgeted,sviridenko2004note}, Badanidiyuru and Vondr\'{a}k based their algorithm on a continuous approach.
-Building upon the approach of \cite{badanidiyuru2014fast}, Ene and Nguy\~{\^{e}}n \cite{Alina2017} presented an algorithm achieving the same approximation guarantee whose running time it $O(\varepsilon^{-O(\varepsilon^{-4})}n \log^2 n)$.
+Building upon the approach of \cite{badanidiyuru2014fast}, Ene and Nguy{\~{\^{e}}}n \cite{Alina2017} presented an algorithm achieving the same approximation guarantee whose running time is $O(\varepsilon^{-O(\varepsilon^{-4})}n \log^2 n)$.
 Both algorithms of \cite{badanidiyuru2014fast,Alina2017} are theoretically interesting and appealing, as they require the introduction of novel ideas that enable one to extrapolate between the discrete and continuous approaches.
-Unfortunately, both are not simple nor fast, as even stated by the authors themselves, {\em e.g.}, see \cite{Alina2017}.
+
+{\color{red}{
+Unfortunately, both algorithms \cite{badanidiyuru2014fast,Alina2017} are not simple nor fast, as even stated by the authors themselves, {\em e.g.}, see \cite{Alina2017}.
 To best exemplify the impracticality of these algorithms one needs only to choose $\varepsilon = \nicefrac[]{1}{4}$.
-This results in an approximation of $(1-\nicefrac[]{1}{e}-\nicefrac[]{1}{4})$, which is worse than the fast algorithm of \cite{khuller1999budgeted} since $(1-\nicefrac[]{1}{e}-\nicefrac[]{1}{4})<(1-e^{-\nicefrac[]{1}{2}})$, and an impossible running time of at least $2^{512} n$ \cite{Alina2017}.
+This results in an approximation of only $(1-\nicefrac[]{1}{e}-\nicefrac[]{1}{4})$, which is worse than the fast algorithm of \cite{khuller1999budgeted} since $(1-\nicefrac[]{1}{e}-\nicefrac[]{1}{4})<(1-e^{-\nicefrac[]{1}{2}})$.
+Moreover, the running time of the faster of these two algorithms is at least $2^{512} n$ \cite{Alina2017}.
+%Thus, the two algorithm of \cite{badanidiyuru2014fast,Alina2017} are far from being simple and fast.  
+Thus, there is a need for {\em truly} fast and simple algorithms for the \SK problem. %with a provable improved approximation guarantee. 
 %This renders the algorithms of \cite{Alina2017,badanidiyuru2014fast} theoretically interesting an appealing, but completely useless.
+}}
 
 %Maximizing a monotone submodular function under a knapsack constraint generalized the budgeted maximum coverage problem~\cite{khuller1999budgeted} and has applications such as document summarization~\cite{lin2010multi} and maximizing entropy in discrete graphical models~\cite{krause2005note}.
 
@@ -129,20 +153,22 @@ This results in an approximation of $(1-\nicefrac[]{1}{e}-\nicefrac[]{1}{4})$, w
 %For example, the ng time of the latter algorithm for $\epsilon = 2^{-2}$ is
 %$2^{2O(2^{8})}n\log^2n$ achieving approximation ratio of $\approx 0.38$.
 
-Another line of research examines the adaptive complexity of submodular maximization, that is the goal is to design approximation algorithms that are faster if (polynomial) parallelization is allowed. 
-Balkanski and Singer developed a $1/3$-approximation algorithm for monotone submodular maximization with cardinality constraint that needs only $O(\log n)$ sequential rounds.
-They also showed that no algorithm can achieve a better approximation than $O(\frac{1}{\log n})$ with fewer than $O(\frac{\log n}{\log\log n})$ \cite{balkanski2018adaptive}.
-Three independent works design an algorithm with approximation ratio of $1 - \frac{1}{e} - \varepsilon$ and $O(\log n)$ sequential rounds \cite{fahrbach2019submodular, balkanski2019exponential, ene2019submodular}.
+%Another line of research examines the adaptive complexity of submodular maximization, that is the goal is to design approximation algorithms that are faster if (polynomial) parallelization is allowed.
+%Balkanski and Singer developed a $1/3$-approximation algorithm for monotone submodular maximization with cardinality constraint that needs only $O(\log n)$ sequential rounds.
+%They also showed that no algorithm can achieve a better approximation than $O(\frac{1}{\log n})$ with fewer than $O(\frac{\log n}{\log\log n})$ \cite{balkanski2018adaptive}.
+%Three independent works design an algorithm with approximation ratio of $1 - \frac{1}{e} - \varepsilon$ and $O(\log n)$ sequential rounds \cite{fahrbach2019submodular, balkanski2019exponential, ene2019submodular}.
 
 
 \paragraph*{Our Results}
-Our results can be partitioned into two parts: $(1)$ fast and simple combinatorial algorithms for \SK; and $(2)$ a general method for ``amplifying'' any algorithm for \SK by improving its approximation factor while losing little in the running time.
+Our results can be partitioned into two parts: $(1)$ {\color{red}{truly}} fast and simple combinatorial algorithms for \SK; and $(2)$ a general method for ``amplifying'' any algorithm for \SK by improving its approximation factor while losing little in the running time.
+Let us elaborate on the above.
 
-\noindent {\bf{Fast and Simple Combinatorial Algorithms:}} We note that the proof that the fast algorithm of \cite{khuller1999budgeted} (named Modified Greedy by the authors) achieves an approximation guarantee of $(1-e^{-\nicefrac[]{1}{2}})$ is incorrect \cite{naor}.
+\vspace{3pt}
+\noindent {\bf{{\color{red}{Truly}} Fast and Simple Combinatorial Algorithms:}} We note that the proof that the fast algorithm of \cite{khuller1999budgeted} (named Modified Greedy by the authors) achieves an approximation guarantee of $(1-e^{-\nicefrac[]{1}{2}})$ is incorrect \cite{naor}.
 We rectify this and note that a correct proof requires a different argument than the one appearing in \cite{khuller1999budgeted}.
 This is summarized in the following theorem.
 \begin{theorem}\label{thrm:CorrectModifiedGreedy}
-The Modified Greedy algorithm of Kuller {\em et. al.} \cite{khuller1999budgeted} for the \SK problem achieves an approximation of $(1-e^{-\nicefrac[]{1}{2}})$.
+The Modified Greedy algorithm of Kuller {\em et al.} \cite{khuller1999budgeted} for the \SK problem achieves an approximation of $(1-e^{-\nicefrac[]{1}{2}})$.
 \end{theorem}
 Building upon the correct proof of Theorem \ref{thrm:CorrectModifiedGreedy}, we present a remarkably simple algorithm that chooses the best between the greedy algorithm and the best pair of elements.
 Our algorithm retains the same running time of $O(n^2)$ as the greedy algorithm and the Modified Greedy algorithm of \cite{khuller1999budgeted}, but achieves an improved approximation guarantee of $\approx 0.453647$ (whereas the Modified Greedy algorithm provides a guarantee of only $1-e^{-\nicefrac{1}{2}}\approx 0.393$).
@@ -150,12 +176,15 @@ In fact, the number of oracle queries used by our algorithm is $3n^2/2+n$.
 This is summarized in the following theorem.
 \begin{theorem}\label{thrm:ModifiedSquared}
 The \SK problem admits an algorithm that runs in time $O(n^2)$ and achieves an approximation of $0.453647$.
+{\color{red}{Moreover, the algorithm requires only $3n^2/2+n$ value oracle queries.}}
 \end{theorem}
 %While proving Theorem \ref{thrm:ModifiedSquared}, we discovered that the proof that the fast algorithm of \cite{khuller1999budgeted} achieves an approximation guarantee of $(1-e^{-\nicefrac[]{1}{2}})$ is incorrect \cite{naor}.
 %We also rectify this and present a different argument that proves the claimed guarantee of \cite{khuller1999budgeted}.
 
+\vspace{3pt}
 \noindent {\bf{Amplification:}} We present a general method for ``amplifying'' algorithms for \SK.
-Specifically, given any black box algorithm $\mathcal{A}$ that obtains an approximation guarantee of $r$ and a number $k\in \mathbb{N}$ of executions, we show how to obtain a new algorithm for \SK with a better approximation than $r$ and a running time that equals $k$ times the running time of the black box algorithm plus an additional  $3n^2/2+n$ oracle queries.
+Specifically, given any black box algorithm $\mathcal{A}$ that obtains an approximation guarantee of $r$ and a number $k\in \mathbb{N}$ of executions, we show how to obtain a new {\color{red}{simple}} algorithm for \SK with a better approximation than $r$.
+The running time of the new algorithm equals $k$ times the running time of the black box algorithm plus an additional $3n^2/2+n$ oracle queries.
 This is summarized in the following theorem.
 \begin{theorem}
 	\label{thrm:Amplification}
@@ -172,8 +201,12 @@ Then there exists an algorithm that uses $3n^2/2+n$ oracle queries plus $k$ time
 \end{theorem}
 
 Given any black box algorithm $\mathcal{A}$ for \SK Theorem \ref{thrm:Amplification} can be used to answer two interesting questions: $(1)$ given an upper bound on the running time of the algorithm what is the best approximation that can be obtained using our amplification framework? $(2)$ given a target approximation guarantee what is the required running time using our amplification framework?
-For example, choosing the black box algorithm $\mathcal{A}$ to be the algorithm whose existence is guaranteed by Theorem \ref{thrm:ModifiedSquared}, amplifying it with $k=6$ we can obtain an algorithm achieving an improved approximation of $0.48$ and only uses  $10.5n^2+7n$ oracle queries.
+For example, choosing the black box algorithm $\mathcal{A}$ to be the algorithm whose existence is guaranteed by Theorem \ref{thrm:ModifiedSquared} ({\color{red}{we note that the approximation of $0.453647$ guaranteed in Theorem \ref{thrm:ModifiedSquared} is obtained {\em without} any amplification}}), amplifying it with $k=6$ we can obtain an algorithm achieving an improved approximation of $0.48$ and only uses  $10.5n^2+7n$ oracle queries.
 Moreover, one can repeatedly apply the amplification, each time with a suitable choice of $k$, obtaining an approximation guarantee that approaches $\nicefrac[]{1}{2}$.
+
+{\color{red}{We note that the amplified algorithm, whose existence is guaranteed by Theorem \ref{thrm:Amplification}, is remarkably simple though its proof requires some work.
+We believe our amplification framework might be of independent interest.
+}}
 
 %Theorem \ref{thrm:Amplification} allows us to amplify any algorithm, in particular the algorithm whose existence is guaranteed in Theorem \ref{thrm:ModifiedSquared}.
 %Two interesting conclusion, for example, that can be derived from Theorems \ref{thrm:Amplification} and \ref{thrm:ModifiedSquared} are: $(1)$ applying the amplification with $k=6$ to the algorithm whose existence is guaranteed in Theorem \ref{thrm:ModifiedSquared} results in an improved approximation of $0.48$ and a running time of
@@ -197,7 +230,7 @@ Both our results, an improved fast and simple algorithm as well as the amplifica
 We require two new insights that allow us to obtain our results.
 
 The first insight relates to how algorithms for \SK can be analyzed.
-At the heart of the analysis of the tight (but slow) algorithm of \cite{khuller1999budgeted,sviridenko2004note} lies the observation that as long as no element of the optimal solution was dropped by the greedy ``bang per buck'' algorithm\footnote{The greedy ``bang per buck'' is formally described in Section \ref{sec:Preliminaries}}, value is accumulated at a rate that depends on the fraction of the budget $\beta$ that was used so far.
+At the heart of the analysis of the tight (but slow) algorithm of \cite{khuller1999budgeted,sviridenko2004note} lies the observation that as long as no element of the optimal solution was dropped by the greedy ``bang per buck'' algorithm\footnote{The greedy ``bang per buck'' is formally described in Section \ref{sec:Preliminaries}.}, value is accumulated at a rate that depends on the fraction of the budget $\beta$ that was used so far.
 Formally, if the greedy ``bang per buck'' uses a fraction $\alpha$ of the budget and it did not drop any element that belongs to the optimal solution so far, then its value is at least a fraction of $(1-e^{-\alpha})$ of the value of the optimal solution.
 Once the first element of the optimal solution is dropped, no further analysis of the algorithm is given in \cite{khuller1999budgeted,sviridenko2004note}.
 
@@ -207,7 +240,7 @@ This plays a crucial role in all of our results: $(1)$ a correct proof to the fa
 The second insight relates to the design of the amplification framework.
 The tight (but slow) algorithm of \cite{khuller1999budgeted,sviridenko2004note} needs to find a small (of size at most three) subset of the most valuable elements in the optimal solution, and extend it by the greedy ``bang per buck'' algorithm.
 This is done by simple enumeration over all small subsets, thus resulting in a tight (but slow) algorithm that runs in $ O(n^5)$ time.
-The crucial point in the analysis is that the algorithm needs to find the {\em exact} subset.
+The crucial point in the analysis is that the algorithm needs to find the {\em exact} subset of the most valuable elements in the optimal solution.
 Hence, since the optimal solution is not known, enumeration is used over the $O(n^3)$ such subsets.
 
 We, on the other hand, adopt a different approach where it is enough to find a small subset that is {\em comparable} in both value and cost to the most valuable small subset in the optimal solution.
@@ -217,33 +250,38 @@ by running it a {\em constant} (the parameter $k$ from Theorem \ref{thrm:Amplifi
 %with only a small loss in the running time.
 
 \paragraph*{Related Work}
-
 A simple greedy algorithm which yields an $(1-e^{-1})$ approximation for the special
-case of \SK with uniform costs (i.e. cardinality constraint), along with a matching 
-lower bound in the oracle model is known since the late 70's due to the
-works of Nemhauser, Wolsey and Fisher \cite{Nemhauser1978}\cite{NW78}.
-Their works also achieved a $\nicefrac[]{1}{2}$ approximation for the problem
-of maximizing a monotone submodular function subject to a {\em matroid}
-constraint \cite{FNW78}. 
-An optimal $(1-e^{-1})$ approximation for the latter problem was only attained in the 2000's with 
-the introduction of the {continuous greedy} and matching 
-	{\em pipage rounding } \cite{CCPV11}.
+case of \SK with uniform costs, {\em i.e.}, a cardinality constraint, along with a matching
+lower bound in the oracle model is known since the late 70's and is due to the
+works of Nemhauser, Wolsey and Fisher \cite{NW78,Nemhauser1978}.
+Their works also achieved an approximation of $\nicefrac[]{1}{2}$ for the problem
+of maximizing a monotone submodular function subject to a matroid
+constraint \cite{FNW78}.
+An optimal approximation of $(1-e^{-1})$ for the latter problem was attained with
+the introduction of the continuous greedy and pipage rounding algorithms by Calinescu {\em et al.} \cite{CCPV11}.
+The \SK problem can also be generalized to the case of {\em multiple} knapsack constraints, for which Kulik {\em et al.} provided a tight approximation of $(1-e^{-1}-\epsilon)$ for every $\epsilon>0$ \cite{KST13}.
 
-The problem can also be generalized to the problem of maximizing submodular function
-subject to {\em multiple} knapsack constraints for which Kulik et. al. provided a $(1-e^{-1}-\epsilon)$ approximation for every $\epsilon>0$ \cite{KST13}.  
-
+{\color{red}{Motivated by the need for scalable algorithms, another line of research examines the adaptive complexity of submodular maximization (the design of approximation algorithms in the presence of parallelization).
+First introduced by Balkanski and Singer \cite{balkanski2018adaptive}, an approximation of $\nicefrac[]{1}{3}$ was given for maximizing a monotone submodular function with a cardinality constraint in $O(\log{n})$ rounds.
+This was subsequently improved independently by \cite{fahrbach2019submodular, balkanski2019exponential, ene2019submodular} to an almost tight approximation of $1 - \frac{1}{e} - \varepsilon$ while retaining the number of sequential rounds.
+Recently, parallel algorithm with bounded adaptivity were given for the more general maroid constraint \cite{BRS18,CQ18,ENV18} and for unconstrained submodular maximization \cite{CFK18}.
+}}
+%Another line of research examines the adaptive complexity of submodular maximization, that is the goal is to design approximation algorithms that are faster if (polynomial) parallelization is allowed.
+%Balkanski and Singer developed a $1/3$-approximation algorithm for monotone submodular maximization with cardinality constraint that needs only $O(\log n)$ sequential rounds.
+%They also showed that no algorithm can achieve a better approximation than $O(\frac{1}{\log n})$ with fewer than $O(\frac{\log n}{\log\log n})$ \cite{balkanski2018adaptive}.
+%Three independent works design an algorithm with approximation ratio of $1 - \frac{1}{e} - \varepsilon$ and $O(\log n)$ sequential rounds \cite{fahrbach2019submodular, balkanski2019exponential, ene2019submodular}.
 
 \paragraph*{Paper Organization}
 Section \ref{sec:Preliminaries} contains needed notations and description of previous algorithms.
-Section \ref{sec:ModifiedGreedy} contains a correct proof of the fast algorithm of Khuller {\em et. al.} \cite{khuller1999budgeted}, whereas Section \ref{sec:Modified2Greedy} contains our improved fast algorithm.
-Lastly, Section \ref{sec:Amplification} describes our amplification method. 
+Section \ref{sec:ModifiedGreedy} contains a correct proof of the fast algorithm of Khuller {\em et al.} \cite{khuller1999budgeted}, whereas Section \ref{sec:Modified2Greedy} contains our improved fast algorithm.
+Lastly, Section \ref{sec:Amplification} describes our amplification method.
 
 \section{Preliminaries}\label{sec:Preliminaries}
 First, we start with some notations that will enable us to simplify the presentation of the algorithms and their proofs.
 We use the notation of $f(B|A)$ to denote the marginal value of $B$ with respect to $A$, {\em i.e.}, $f(A\cup B)-f(A)$.
 When it is clear from the context we use $x$, where $x\in U$, to denote the set $\{ x\}$.
 For any subset $A\subseteq U$ we denote by $c(A)\triangleq \sum _{x\in A}c(x)$.
-Moreover, for an ordered set $A = \{a_1, \dots, a_k\}$ we use $A_i$ to denote its prefix of size $i$, {\em i.e.}, $\{a_1, \dots, a_i\}$ ($A_0$ is set to the empty set).
+Moreover, for an ordered set $A = \{a_1, \dots, a_k\}$ we use $A_i$ to denote its prefix of size $i$, {\em i.e.}, $\{a_1, \dots, a_i\}$ ($A_0$ is set to $\emptyset$).
 Since $f$ is monotone and non-negative, we can assume without loss of generality that $f(\emptyset)=0$.
 
 Second, let us present known fast algorithms for \SK.
@@ -273,7 +311,7 @@ the algorithm \emph{dropped} the element $e'$.
 It is well known that in general the approximation ratio of Algorithm \ref{alg:greedy}
 can be arbitrarily bad.
 
-Khuller {\em et. al.} \cite{khuller1999budgeted} presented the Modified Greedy algorithm, which returns the best between the greedy algorithm (Algorithm \ref{alg:greedy}) and the single best element.
+Khuller {\em et al.} \cite{khuller1999budgeted} presented the Modified Greedy algorithm, which returns the best between the greedy algorithm (Algorithm \ref{alg:greedy}) and the single best element.
 This appears in Algorithm \ref{alg:mgreedy} (its input is identical to that of Algorithm \ref{alg:greedy}).
 
 \begin{algorithm}[H]
@@ -296,7 +334,7 @@ $\frac{f(a_i|A_{i-1})}{c(a_i)} \geq \frac{f(e|A_{i-1})}{c(e)}$.
 Then, $f(A) \geq (1 - e^{-\frac{c(A)}{c(B)}})f(B)$.
 \end{lemma}
 
-The proof for the lemma is given in Appendix  \ref{appendix:omitted}. We note that 
+The proof for the lemma is given in Appendix  \ref{appendix:omitted}. We note that
 the proof only uses standard techniques from previous works.
 
 A particular corollary of the above lemma is that if $A$ is the set of elements chosen by the greedy algorithm in
@@ -310,7 +348,7 @@ then all the condition of Lemma~\ref{lemma:sub-main} are met and it can be appli
 
 
 \section{Correct Proof for Approximation Factor of Modified Greedy}\label{sec:ModifiedGreedy}
-We note that the proof given by Khuller {\em et. al.} \cite{khuller1999budgeted} that the Modified Greedy algorithm (Algorithm~\ref{alg:mgreedy}) provides an approximation of $ (1-e^{-\nicefrac[]{1}{2}})$ for \SK is flawed.
+We note that the proof given by Khuller {\em et al.} \cite{khuller1999budgeted} that the Modified Greedy algorithm (Algorithm~\ref{alg:mgreedy}) provides an approximation of $ (1-e^{-\nicefrac[]{1}{2}})$ for \SK is flawed.
 {{The flaw originates from applying Lemma~\ref{lemma:sub-main} incorrectly for a set for which the greedy algorithm (Algorithm~\ref{alg:greedy}) might have dropped elements.
 See the last statement in the proof of Theorem 3 in~\cite{khuller1999budgeted} (page 42, right column, line 10 from the bottom).}}
 To give a correct proof we incorporate a new insight to
@@ -324,6 +362,7 @@ an element from the optimal solution has been dropped.
 %We note that in order to give a correct proof for the performance of the algorithm a somewhat different argument is required.
 
 Let $O$ be an optimal solution, and recall that $T$ is the output of Algorithm~\ref{alg:mgreedy}.
+We are now ready to prove Theorem \ref{thrm:CorrectModifiedGreedy}.
 
 %We analyze the Modified Greedy algorithm (Algorithm~\ref{alg:mgreedy}) of \cite{khuller1999budgeted}.
 %Our analysis matches the $(1 - e^{-1/2})$-approximation claimed in \cite[]{khuller1999budgeted}, correcting the logical flaw in the analysis.
@@ -340,20 +379,21 @@ Let $O$ be an optimal solution, and recall that $T$ is the output of Algorithm~\
 	We can assume that $f(e) \leq (1 - e^{-1/2})f(O)$ for every $e \in U$, otherwise the value of $e$, and hence of $T$, is large enough and the theorem holds.
 	Recall that by the definition of Algorithm~\ref{alg:mgreedy} $S$ is the output of the greedy algorithm, and let $e^*$ be the most valuable element.
 	
-	Consider two cases depending on how many elements of $O$ are dropped by the greedy algorithm, i.e., $|O \setminus S|$.
+	Consider two cases depending on how many elements of $O$ are dropped by the greedy algorithm, {\em i.e.}, $|O \setminus S|$.
 	If $|O \setminus S| \leq 1$, then
 	$$
 	f(O) \leq f(O \cup S) \leq f(O \setminus S) + f(S) \leq f(e^*) + f(S).
 	$$
 	The above implies that either $f(S) \geq \frac{1}{2}f(O)$ or $f(e^*) \geq \frac{1}{2}f(O)$ concluding the proof for this case.
-	Otherwise, $|O \setminus S| \geq 2$.
-	Denote by $a$ and $b$ the first and second elements of $O$ the greedy algorithm drops, {\em i.e.} $a$ is the considered element at the first time the condition in line~\ref{line:dropped} of Algorithm~\ref{alg:greedy} is evaluated to false and $b$ is the considered element the second time the same condition is evaluated to false.
+
+Otherwise, $|O \setminus S| \geq 2$.
+	Denote by $a$ and $b$ the first and second elements of $O$ the greedy algorithm drops, {\em i.e.} $a$ is the considered element at the first time the condition in line~\ref{line:dropped} of Algorithm~\ref{alg:greedy} is evaluated to false {\color{red}{for an element of $O$}} and $b$ is the considered element the second time the same condition is evaluated to false {\color{red}{for an element of $O$}}.
 	Denote by $A$ the set of elements chosen by the algorithm just before dropping $a$ and by
 	$B$ the set of elements chosen right after dropping $a$ and before dropping $b$.
 	If $f(A) \geq (1 - e^{-1/2})f(O)$ then the theorem holds.
 	Otherwise, $f(A) = (1 - e^{-(1/2 - \delta)})f(O)$ where $0 < \delta \leq \nicefrac[]{1}{2}$.
 
-	To prove the theorem we need to infer from the above bounds on both size and value.
+	To prove the theorem we {\color{red}{require bounds on both size and value}}.
 	First, we focus on bounds on the size:
 	\begin{align}
 		\label{mgreedy:ineq1}
@@ -369,7 +409,8 @@ Let $O$ be an optimal solution, and recall that $T$ is the output of Algorithm~\
 %Specifically, if $c(A) > (\nicefrac[]{1}{2} - \delta)c(O) $ one can apply Lemma~\ref{lemma:sub-main} on $A$ and $O$.
 %Note that all conditions of Lemma~\ref{lemma:sub-main} are satisfied by the definition of $A$ and thus it can be applied in this case.
 	Inequality \eqref{mgreedy:ineq2} lower bound the size of $a$ and follows from the fact that $a$ was dropped by the greedy algorithm, {\em i.e.}, $c(A \cup \{a\}) > \beta \geq c(O)$. Inequality \eqref{mgreedy:ineq3} is due to inequality \eqref{mgreedy:ineq2}, since $c(O \setminus \{a\}) = c(O) - c(a)$ and $\{b\} \subseteq O \setminus \{a\}$.
-	The above inequalities imply a lower bound  on the size of $B$:
+%	The above inequalities imply a lower bound  on the size of $B$:
+{\color{red}{Inequalities (\ref{mgreedy:ineq1}) and (\ref{mgreedy:ineq3}), along with the fact that $c(A\cup B\cup \{ b\})>c(O)$, provide a lower bound on the size of $B$:}}
 	\begin{equation}
 		\label{mgreedy:ineq4}
 		c(B) > (2\delta)c(O).
@@ -406,7 +447,7 @@ Let $O$ be an optimal solution, and recall that $T$ is the output of Algorithm~\
 
 \section{The Modified\textsuperscript{2} Greedy Algorithm}\label{sec:Modified2Greedy}
 We present a remarkably simple adaptation of the Modified Greedy algorithm of \cite{khuller1999budgeted} (Algorithm \ref{alg:mgreedy}) that retains the same running time of $O(n^2)$ for which we can prove a better approximation guarantee of $0.453647$.
-Our algorithm returns the best between the greedy algorithm (Algorithm \ref{alg:greedy}) and highest value pair of elements.
+Our algorithm returns the best between the greedy algorithm (Algorithm \ref{alg:greedy}) and highest value pair of elements ({\color{red}{the algorithm also implicitly considers singletons and thus explores a superset of Algorithm's \ref{alg:mgreedy} search space}}).
 We denote this algorithm by Modified\textsuperscript{2} Greedy and it appears as Algorithm \ref{alg:mmgreedy}.
 We prove that Algorithm \ref{alg:mmgreedy} achieves the guarantee claimed in Theorem \ref{thrm:ModifiedSquared}.
 
@@ -488,7 +529,7 @@ This gives us the following:
 	\left[
 	e^{-(\nicefrac[]{1}{2} + \varepsilon)}
 	- (1 - e^{-(\nicefrac[]{1}{2} + \varepsilon - \delta)})
-	\right]f(O)
+	\right]f(O).
 \end{equation}
 
 Finally, we would like to lower bound $f(T)$.
@@ -548,14 +589,16 @@ Optimizing over $0 < \epsilon \leq \nicefrac[]{1}{6}$ we get that $\varepsilon =
 \def\BOTAlg{BestOfThree}
 \def\mA{\mathcal{A}}
 
-In this section we show a simple algorithm, which given
-an $r$-approximation $\mA$ for \SK, $r<1/2$ can
-be used to derive an $r'$-approximation, $r<r' <1/2$, for
-\SK using  a constant number of calls
-for $\mA$ and $\frac{3n^2}{2}+n$ oracle queries.
+{\color{red}{In this section we present our amplification framework.
+Specifically, we show a simple algorithm, which given
+an $r$-approximation algorithm $\mA$ for \SK (where $r<1/2$), can
+use $\mA$ to derive an $r'$-approximation for
+\SK (where $r<r' <1/2$) using  a constant number of calls
+to $\mA$ and $3n^2/2+n$ additional oracle queries.
+}}
 
 Algorithm \ref{algorithm:amplify} receives
-an approximation algorithm $\mA$ for $\SK$,for
+an approximation algorithm $\mA$ for $\SK$, for
 a universe $U$, a monotone non-negative
 submodular function $f:2^U \rightarrow \mathbb{R}$,
 a non-negative cost function $c:U \rightarrow \mathbb{R}$, and a budget $\beta$.
@@ -566,14 +609,14 @@ to the claims in this section to obtain the required approximation
 ratio and complexity.
 
 Broadly speaking,  the algorithm finds the pair of  elements with maximal value $\pVal$. It then divides all pairs of elements $\{a,b\} \subseteq U$ for which
-$\frac{f(\{a,b\})}{f(\pVal)} \geq \rho$ into {\em buckets}, where the subsets
-in each bucket have the same value to a factor of $(1+\epsilon)$.
+$\nicefrac[]{f(\{a,b\})}{f(\pVal)} \geq \rho$ into {\em buckets}, where the subsets
+in each bucket have the same value up to a factor of $(1+\epsilon)$.
 The algorithm then extends the set of smallest cost in  each bucket
 to a solution using the algorithm $\mA$.  The algorithm returns the
 best between the solutions found using the buckets and $\mA$, the pair of
 elements with maximal profit, the single element with maximal profit, and the result of the greedy algorithm over the input instance.
 
-We remark that while the proofs of our claims regarding the amplification framework are a bit long and involved, the resulting amplified algorithm is simple and comes down to choosing a constant number of pairs of elements and extending them to complete solutions using the given (unamplified) algorithm as a black-box.
+We remark that while the proofs of our claims regarding the amplification framework are {\color{red}{involved and require some work}}, the resulting amplified algorithm is simple and comes down to {\color{red}{meticulously}} choosing a constant number of pairs of elements and extending {\color{red}{each of}} them to a complete solution using the given (unamplified) algorithm {\color{red}{$\mA$}} as a black-box.
 
 \begin{algorithm}
 	\caption{Amplify($\mA, U, f, c, \beta, \epsilon, \rho$)}
@@ -604,21 +647,23 @@ We remark that while the proofs of our claims regarding the amplification framew
 
 \end{algorithm}
 
-The following function, which already appeared on Theorem \ref{thrm:Amplification}, will be useful throughout the analysis of the algorithm:
+The following functions, which already appeared in Theorem \ref{thrm:Amplification}, are useful throughout the analysis of the algorithm:
 
 $$ B(\alpha)=1-e^{-\frac{1}{\alpha}}$$
 $$ A(\alpha) = \frac{1}{1-e^{-\alpha}}-\frac{1}{B(\alpha)}$$
- $$D(\alpha)=(1-e^{-\alpha})/B(\alpha)$$
+ $$D(\alpha)=(1-e^{-\alpha})/B(\alpha).$$
 
  \begin{lemma}
  	\label{lemma:amplification}
- 	Given an $r$-approximation $\mA$ for $\SK$ where $r<\frac{1}{2}$.
+ {\color{red}{
+ 	Let $\mA$ be a $r$-approximation for $\SK$ where $r<\nicefrac[]{1}{2}$.
  	For any $0< \alpha \leq  \ln 2$, input $U,f,c,\beta$ of $\SK$,
- 	and $\epsilon$ such that $0<\epsilon\leq \frac{1-2r}{r}$, then executing
+ 	and $\epsilon$ such that $0<\epsilon\leq \nicefrac[]{(1-2r)}{r}$, executing
  	Algorithm \ref{algorithm:amplify}  with parameters
- 	$(\mA, U, f, c, \beta, \epsilon, A(\alpha))$ returns
+ 	$(\mA, U, f, c, \beta, \epsilon, A(\alpha))$ returns a
  	$$min\left(1-e^{-\alpha}, D(\alpha) + (1-r) \left( \frac{2+\epsilon}{1+\epsilon}(1- D(\alpha)) -1 \right) \right)$$
  	approximation for the input instance.
+ }}
  \end{lemma}
 
 
@@ -632,7 +677,7 @@ $$ A(\alpha) = \frac{1}{1-e^{-\alpha}}-\frac{1}{B(\alpha)}$$
 	Let $L\beta$ be the highest cost of element in $O$.  If $L\leq 1-\alpha$ then
 	by Lemma \ref{lemma:sub-main} and the monotonicity of $f$: $f(G) \geq (1-e^{-\alpha}) f(O)$  (recall that $G$ is the result of
 	greedy in line \ref{amplify:greedy} of the algorithm and thus Lemma \ref{lemma:sub-main} can be applied on the appropriate prefix of $G$). Therefore, the algorithm
-	returns a solution of value at least $(1-e^{-\alpha})f(O)$ and the Lemma holds. Therefore we can assume  $L> 1-\alpha$.
+	returns a solution of value at least $(1-e^{-\alpha})f(O)$ and the lemma holds. Therefore, we can assume  $L> 1-\alpha$.
 %
 %	{\color{red}
 %	consider $G'\subseteq G$ to be the subset selected by the greedy (in line \ref{amplify:greedy})
@@ -644,9 +689,9 @@ $$ A(\alpha) = \frac{1}{1-e^{-\alpha}}-\frac{1}{B(\alpha)}$$
 	
 	If $O\setminus \pLarge \subseteq G$, then
 	$f(G)+ f(\pVal)\geq f(O\setminus \pLarge) + f(\pLarge) \geq f(O)$.
-	Therefore $f(G)\geq \frac{f(O)}{2}$ or $f(\pVal)\geq \frac{f(O)}{2}$
-	thus the Lemma holds (note that $\alpha \leq \ln 2$ and therefore
-	$1-e^{-\alpha} < \frac{1}{2}$). Thus we can assume that
+	Hence, $f(G)\geq \nicefrac[]{f(O)}{2}$ or $f(\pVal)\geq \nicefrac[]{f(O)}{2}$
+	and thus the lemma holds (note that $\alpha \leq \ln 2$ and therefore
+	$1-e^{-\alpha} < \nicefrac[]{1}{2}$). Thus, we can assume that
 	$O\setminus \pLarge \nsubseteq G$.
 	
 	The following corollary states that if $f(\pLarge)$ is fairly small
@@ -661,10 +706,10 @@ $$ A(\alpha) = \frac{1}{1-e^{-\alpha}}-\frac{1}{B(\alpha)}$$
 \begin{proof}
 	
 
-	Let $\beta M$ be the third highest cost of element in  $O$.
+	Let $\beta M$ be the third highest cost of an element in  $O$.
 	As the highest cost of  element in $O$ is $\beta L$,
 	using a simple argument we get, $M\leq M(L)$ where $M(L)= \min \{\frac{1-L}{2}, L\}$. Since
-	$O\setminus \pLarge \nsubseteq G$, there must be an element from $O \setminus \pLarge$ the greedy in line \ref{amplify:greedy} drops. Since all the elements
+	$O\setminus \pLarge \nsubseteq G$, there must be an element from $O \setminus \pLarge$ the greedy algorithm in line \ref{amplify:greedy} drops. Since all the elements
 	in $O\setminus \pLarge$ are of cost at most $\beta M$ the knapsack must
 	already have elements of cost $\beta (1-M)$ at the first time an element from $O\setminus \pLarge$ is dropped. Also, $c(O\setminus \pLarge) \leq \beta(1-L -M)$, therefore by Lemma \ref{lemma:sub-main} and the monotonicity of $f$ we get that:
   	$$f(G)\geq \left(1-e^{- \frac{\beta (1-M) }{c(O\setminus \pLarge)}}\right) f(O\setminus \pLarge)
@@ -672,7 +717,7 @@ $$ A(\alpha) = \frac{1}{1-e^{-\alpha}}-\frac{1}{B(\alpha)}$$
   			
   	We note that the term $\frac{1-M}{1-L-M} = \left(  1- \frac{L}{1-M} \right)^{-1}$ is increasing as a function
   	of $M$  in the range $[0, M(L)]$ (note that $1-L-M >0$ in the range).
-  	Therefore $\frac{1-M}{1-L-M} \geq  \frac{1 }{1-L}  \geq \frac{1}{1-(1-\alpha)} = \nicefrac[]{1}{\alpha}$. And conclude
+  	Therefore, $\frac{1-M}{1-L-M} \geq  \frac{1 }{1-L}  \geq \frac{1}{1-(1-\alpha)} = \nicefrac[]{1}{\alpha}$. And conclude
   %	The term  $1-e^{- \frac{1-M(L) }{1-L-M(L)}}$ is increasing as a function of $L$
   %	({\bf this is not trivial, I simply drew the graph on Desmos for that}), therefore
   	%	as $L> (1-\alpha)$ we get
@@ -682,7 +727,7 @@ $$ A(\alpha) = \frac{1}{1-e^{-\alpha}}-\frac{1}{B(\alpha)}$$
   	%As $\frac{2}{3} \leq \alpha \leq \ln 2$ we have $M(1-\alpha) = 1-\alpha$. Combining this with the previous inequality we get
   	  $$f(G)
   	\geq \ \left(1-e^{- \frac{1-M }{1-L-M}}\right) f(O\setminus \pLarge) \geq \left( 1- e ^ {- \frac{1}{ \alpha}} \right)f(O\setminus \pLarge)
-  	= B(\alpha)f(O\setminus \pLarge) $$
+  	= B(\alpha)f(O\setminus \pLarge). $$
   	
   	Now, recall that $D(\alpha)= \frac{1-e^{-\alpha}}{B(\alpha)}$,
 	$f(O|\pLarge) \geq D(\alpha) f(O)$ by the condition of the
@@ -695,17 +740,17 @@ $$ A(\alpha) = \frac{1}{1-e^{-\alpha}}-\frac{1}{B(\alpha)}$$
 f(G) \geq& B(\alpha)f(O\setminus \pLarge)  \geq
 B(\alpha) f(O|\pLarge)\\  \geq&
 B(\alpha ) D(\alpha ) f(O)
-= B(\alpha)\frac{1-e^{-\alpha}}{B(\alpha) }f(O)= (1-e^{-\alpha})f(O)
+= B(\alpha)\frac{1-e^{-\alpha}}{B(\alpha) }f(O)= (1-e^{-\alpha})f(O).
 \end{align*}
 %\end{array}
 %	\end{equation*}
-
+{\color{red}{This concludes the proof of Corollary \ref{corollary:cor1}.}}
 	\end{proof}
 
 	\begin{corollary}
 		\label{corollary:cor2}
-		If $f(G)< (1-e^{-\alpha})f(O)$ and $f(\pVal) < (1-e^{-\alpha})f(O)$ then
-		$f(\pLarge) \geq A(\alpha) f(\pVal)$
+		If $f(G)< (1-e^{-\alpha})f(O)$ and $f(\pVal) < (1-e^{-\alpha})f(O)$, then
+		$f(\pLarge) \geq A(\alpha) f(\pVal)$.
 		\end{corollary}
 	\begin{proof}
 		As $f(G)< (1-e^{-\alpha})$, the condition of corollary \ref{corollary:cor1} does not hold. Therefore
@@ -719,13 +764,12 @@ B(\alpha ) D(\alpha ) f(O)
 		$$
 		The second inequality uses the observation that $D(\alpha) \leq 1$ for $0\leq \alpha \leq 1$ which can be easily verified. The last equality follows from the definitions
 		of $D(\alpha)$ and $A(\alpha)$.
-		
-			
+{\color{red}{This concludes the proof of Corollary \ref{corollary:cor2}.}}
 		\end{proof}
 
 	\begin{corollary}
 		\label{corollary:cor3}
-			If $f(G)< (1-e^{-\alpha})f(O)$ and $f(\pVal) < (1-e^{-\alpha})f(O)$ then
+			If $f(G)< (1-e^{-\alpha})f(O)$ and $f(\pVal) < (1-e^{-\alpha})f(O)$, then
 			there is $i\in \{0, \ldots, i_{\max}\}$ such that
 		$$\frac{f(S_i)}{f(O)} \geq D(\alpha) + (1-r)\left( \frac{2+\epsilon}{1+\epsilon} D(\alpha) -1 \right).$$
 	\end{corollary}
@@ -733,14 +777,14 @@ B(\alpha ) D(\alpha ) f(O)
 		As the conditions of corollary \ref{corollary:cor2} hold, we have
 		$f(\pLarge) \geq A(\alpha) f(\pVal)$.
 		 Let $i$ be the minimal integer $i$ such
-		that $\frac{f(\pLarge)}{f(\pVal)} < A(\alpha)(1+\epsilon) ^{i+1}$, as $f(\pLarge) \geq A(\alpha) f(\pVal)$ we get $i\geq 0$.
+		that $\nicefrac[]{f(\pLarge)}{f(\pVal)} < A(\alpha)(1+\epsilon) ^{i+1}$, as $f(\pLarge) \geq A(\alpha) f(\pVal)$ we get $i\geq 0$.
 		Recall that $i_{\max}= \floor{\log_{1+\epsilon} \frac{1}{\rho} } =
 		\floor{\log_{1+\epsilon} \frac{1}{A(\alpha)}} $ (as the algorithm is used
 			with $\rho=A(\alpha)$).
 			Therefore,
 			$$A(\alpha) (1+\epsilon) ^{i_{\max} +1}
-			> A(\alpha) \frac{1}{A(\alpha) } = 1 \geq \frac{f(\pLarge)}{f(\pVal)}$$
-			Thus $i\leq i_{\max}$.
+			> A(\alpha) \frac{1}{A(\alpha) } = 1 \geq \frac{f(\pLarge)}{f(\pVal)}.$$
+			Thus, $i\leq i_{\max}$.
 			Also $c(\pLarge) \leq c(O) \leq \beta$, and we can conclude that
 			$\pLarge \in B_i$ (note that $w_{\max} = f(\pVal)$).
 			
@@ -769,14 +813,14 @@ B(\alpha ) D(\alpha ) f(O)
 			\frac{(2 + \epsilon)}{(1 + \epsilon)}(1-r) - 1
 			\right)
 			f(\pLarge)
-			+ rf(O)
+			+ rf(O).
 			\end{align*}
 			
 			As $\epsilon\leq \frac{1-2r}{r}$ one can deduce that
 			$\left(
 			\frac{(2 + \epsilon)}{(1 + \epsilon)}(1-r) - 1
 			\right) \geq 0$.
-			Also, since $f(G)< (1-e^{-\alpha})f(O)$ by corollary \ref{corollary:cor1} we
+			Also, since $f(G)< (1-e^{-\alpha})f(O)$ by Corollary \ref{corollary:cor1} we
 			get $f(O|\pLarge)  <D(\alpha)f(O)$, by using $f(O|\pLarge)= f(O) -f(\pLarge)$
 			and rearranging  the terms we get
 			$f(\pLarge)> (1-D(\alpha)) f(O)$.
@@ -791,20 +835,20 @@ B(\alpha ) D(\alpha ) f(O)
 				\left(
 			\frac{(2 + \epsilon)}{(1 + \epsilon)}(1-r) - 1
 			\right) (1-D(\alpha ) )f(O) +rf(O)\\
-			=& f(O) \left(  D(\alpha) + (1-r)\left(  \frac{(2 + \epsilon)}{(1 + \epsilon)} (1-D(\alpha)) -1\right) \right)
+			=& f(O) \left(  D(\alpha) + (1-r)\left(  \frac{(2 + \epsilon)}{(1 + \epsilon)} (1-D(\alpha)) -1\right) \right),
 			\end{align*}
 			and the corollary immediately follows.
-			
-		
+{\color{red}{This concludes the proof of Corollary \ref{corollary:cor3}.}}
 	\end{proof}
-The Lemma follows immediately from corollary \ref{corollary:cor3} as it states
+{\color{red}{We are now ready to finish the proof of Lemma \ref{lemma:amplification}.}}
+The lemma follows immediately from corollary \ref{corollary:cor3} as it states
 that either $G$, $\pVal$ or $S_i$ for some $i$ would provide the required approximation
 ratio.
 \end{proof}
 
 \begin{lemma}
 	\label{lemma:amp_runtime}
-Algorithm \ref{algorithm:amplify} uses $\floor{\log_{1+\epsilon} \frac{1}{\rho}}+1$
+Algorithm \ref{algorithm:amplify} uses $\floor{\log_{1+\epsilon} \left(\nicefrac[]{1}{\rho}\right)}+1$
 	invocation to $\mA$ and up to $\frac{3}{2} n ^2+n$ additional oracle queries.
  \end{lemma}
 \begin{proof}
@@ -830,7 +874,6 @@ Algorithm \ref{algorithm:amplify} uses $\floor{\log_{1+\epsilon} \frac{1}{\rho}}
 	2^{\log_2(\nicefrac[]{1}{r}-1)} -1 = \nicefrac[]{1}{r}-2 = \frac{1-2r}{r} .$$
 	therefore the conditions of Lemma \ref{lemma:amplification} apply,
 	and the approximation ratio follows.
-	
 	By lemma \ref{lemma:amp_runtime} the number of invocations for $\mA$
 	is
 	\begin{align*}
@@ -840,14 +883,15 @@ Algorithm \ref{algorithm:amplify} uses $\floor{\log_{1+\epsilon} \frac{1}{\rho}}
 	= \frac{-\log {A(\alpha^*)}} {\log(2 ^{-\frac{\log_2 (A(\alpha^*))}{k-1}} )} +1
 	= \frac{-\log {A(\alpha^*)}} {-\frac{\log_2 (A(\alpha^*))}{k-1}} +1
 	= k \end{align*}
-	and the number of addition oracle queries is $\nicefrac[]{3n^2}{2} + n $
-	as required.
-	
+	and the number of addition oracle queries is $\frac{3n^2}{2} + n $
+	as required.	
 \end{proof}
 
+\newpage
 
 \bibliographystyle{plain}
 \bibliography{main}
+
 
 \appendix
 \section{Omitted Proofs}
@@ -883,11 +927,7 @@ Algorithm \ref{algorithm:amplify} uses $\floor{\log_{1+\epsilon} \frac{1}{\rho}}
 		f(B) - f(A_i)  \leq f(B)\cdot
 		e^{-\frac{c(A_i)}{c(B)}}.
 		$$
-		Rearranging the terms and setting $i = k$ completes the proof.
-
-	
-	
-	
+		Rearranging the terms and setting $i = k$ completes the proof.	
 \end{proof}
 
 
